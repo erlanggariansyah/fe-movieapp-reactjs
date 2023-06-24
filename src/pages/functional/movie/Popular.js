@@ -6,17 +6,19 @@ import axios from "axios";
 import Movie from "../../../models/movie";
 import Hero from "../../../components/functional/Hero";
 import React from "react";
+import { useDispatch } from "react-redux";
+import { updateMovie } from "../../../features/movieSlice";
 
 const Popular = () => {
-    const [movies, setMovies] = useState(data)
+    const dispatch = useDispatch();
 
     const fetchData = async () => {
         const response = await axios(URIConstant.POPULAR)
-        const nowPlayingMovies = response.data.results.map((nowPlayingMovie) => {
+        const popularMovies = response.data.results.map((nowPlayingMovie) => {
             return new Movie(nowPlayingMovie.id, nowPlayingMovie.title, nowPlayingMovie.release_date.substring(0, 4), URIConstant.imageURL(nowPlayingMovie.poster_path))
         })
 
-        setMovies(nowPlayingMovies)
+        dispatch(updateMovie(popularMovies))
     }
 
     useEffect(() => {
@@ -26,7 +28,7 @@ const Popular = () => {
     return (
         <>
             <Hero />
-            <Movies movies={movies} setMovies={setMovies} title="Popular Films" />
+            <Movies title="Popular Films" />
         </>
     );
 }

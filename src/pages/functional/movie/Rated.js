@@ -6,17 +6,19 @@ import axios from "axios";
 import Movie from "../../../models/movie";
 import Hero from "../../../components/functional/Hero";
 import React from "react";
+import { useDispatch } from "react-redux";
+import { updateMovie } from "../../../features/movieSlice";
 
 const Rated = () => {
-    const [movies, setMovies] = useState(data)
+    const dispatch = useDispatch();
 
     const fetchData = async () => {
         const response = await axios(URIConstant.TOP_RATED)
-        const nowPlayingMovies = response.data.results.map((nowPlayingMovie) => {
+        const ratedMovies = response.data.results.map((nowPlayingMovie) => {
             return new Movie(nowPlayingMovie.id, nowPlayingMovie.title, nowPlayingMovie.release_date.substring(0, 4), URIConstant.imageURL(nowPlayingMovie.poster_path))
         })
 
-        setMovies(nowPlayingMovies)
+        dispatch(updateMovie(ratedMovies))
     }
 
     useEffect(() => {
@@ -26,7 +28,7 @@ const Rated = () => {
     return (
         <>
             <Hero />
-            <Movies movies={movies} setMovies={setMovies} title="Rated Films" />
+            <Movies title="Rated Films" />
         </>
     );
 }
